@@ -18,34 +18,52 @@ const App = () => {
 
     useHotkeys([["mod+J", () => toggleColorScheme()]])
 
-    // const [updateAvailable, setUpdateAvailable] = useState(false)
-    // const [updateMessage, setUpdateMessage] = useState("Update available")
-    // const [isOpen, setIsOpen] = useState(true)
+    const [updateAvailable, setUpdateAvailable] = useState(false)
+    const [updateMessage, setUpdateMessage] = useState("Update available")
+    const [isOpen, setIsOpen] = useState(true)
 
-    // // Check if update is available.
-    // useEffect(() => {
-    //     emit("tauri://update")
+    // Check if update is available.
+    useEffect(() => {
+        emit("tauri://update")
+            .then((data) => {
+                console.log("Update emit: ", data)
+            })
+            .catch((err) => {
+                console.error("Update emit error: ", err)
+            })
+            .finally(() => {
+                console.log("finally done")
+            })
 
-    //     console.log("Checking version")
+        console.log("Checking version")
 
-    //     listen("tauri://update-available", (res) => {
-    //         console.log("New version: ", res)
-    //         // setUpdateAvailable(true)
-    //         // getVersion(res.payload.version)
-    //     })
-    // }, [])
+        listen("tauri://update-available", (res) => {
+            console.log("New version: ", res)
+            setUpdateAvailable(true)
+            // getVersion(res.payload.version)
+        })
+            .then((data) => {
+                console.log("Listening: ", data)
+            })
+            .catch((err) => {
+                console.error("Update available error: ", err)
+            })
+            .finally(() => {
+                console.log("Update available finally done")
+            })
+    }, [])
 
-    // // Grab the program version.
-    // const getVersion = async (newVersion: string) => {
-    //     await app
-    //         .getVersion()
-    //         .then((version) => {
-    //             setUpdateMessage(`Update available: v${version} -> v${newVersion}`)
-    //         })
-    //         .catch(() => {
-    //             setUpdateMessage("Update available")
-    //         })
-    // }
+    // Grab the program version.
+    const getVersion = async (newVersion: string) => {
+        await app
+            .getVersion()
+            .then((version) => {
+                setUpdateMessage(`Update available: v${version} -> v${newVersion}`)
+            })
+            .catch(() => {
+                setUpdateMessage("Update available")
+            })
+    }
 
     return (
         <ColorSchemeProvider colorScheme={colorScheme} toggleColorScheme={toggleColorScheme}>

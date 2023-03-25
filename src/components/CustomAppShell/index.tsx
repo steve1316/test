@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react"
+import { useState, useEffect, useContext } from "react"
 import { AppShell, Code, createStyles, Group, Navbar, ScrollArea, useMantineTheme } from "@mantine/core"
 import { getStylesRef, rem } from "@mantine/styles"
 import { Icon } from "@iconify/react"
@@ -9,17 +9,38 @@ import NotFound from "../../pages/NotFound"
 import ExtraSettings from "../../pages/ExtraSettings"
 import Adjustments from "../../pages/Adjustments"
 import Settings from "../../pages/Settings"
+import * as app from "@tauri-apps/api/app"
+import { BotStateContext } from "../../context/BotStateContext"
 
 const CustomAppShell = () => {
     const theme = useMantineTheme()
     const [active, setActive] = useState("Home")
     const [expanded, setExpanded] = useState("")
 
+    const bsc = useContext(BotStateContext)
+
     useEffect(() => {
         if (active !== expanded) {
             setExpanded("")
         }
     }, [active])
+
+    useEffect(() => {
+        getVersion()
+    }, [])
+
+    // Grab the program version.
+    const getVersion = async () => {
+        await app
+            .getVersion()
+            .then((version) => {
+                console.log(`Current program version is v${version}`)
+                bsc.setAppVersion(version)
+            })
+            .catch(() => {
+                bsc.setAppVersion("failed to get version")
+            })
+    }
 
     const useStyles = createStyles((theme) => ({
         header: {
@@ -127,7 +148,7 @@ const CustomAppShell = () => {
                         <Group className={classes.header} position="apart">
                             <Icon icon="logos:mantine-icon" width={25} height={25} />
                             <span>Granblue Automation</span>
-                            <Code sx={{ fontWeight: 700 }}>v3.1.2</Code>
+                            <Code sx={{ fontWeight: 700 }}>{`v${bsc.appVersion}`}</Code>
                         </Group>
                     </Navbar.Section>
 
