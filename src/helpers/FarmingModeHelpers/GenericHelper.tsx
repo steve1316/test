@@ -1,4 +1,4 @@
-import { Container, Text } from "@mantine/core"
+import { Stack, Text } from "@mantine/core"
 import CustomSwitch from "../../components/CustomSwitch"
 import { useContext } from "react"
 import { BotStateContext } from "../../context/BotStateContext"
@@ -8,7 +8,7 @@ const GenericHelper = () => {
 
     if (bsc.settings.game.farmingMode === "Generic") {
         return (
-            <Container>
+            <Stack>
                 <Text>{`Selecting this will repeat the current mission on the screen until it finishes the required number of runs. Note that Generic does not provide any navigation.
                                 
                                 It is required that the bot starts on either the Combat screen with the "Attack" button visible, the Loot Collection screen with the "Play Again" button visible, or the Coop Room screen with the "Start" button visible and party already selected.`}</Text>
@@ -20,7 +20,7 @@ const GenericHelper = () => {
                     checked={bsc.settings.generic.enableForceReload}
                     onChange={(checked) => bsc.setSettings({ ...bsc.settings, generic: { ...bsc.settings.generic, enableForceReload: checked } })}
                 />
-            </Container>
+            </Stack>
         )
     } else {
         return null

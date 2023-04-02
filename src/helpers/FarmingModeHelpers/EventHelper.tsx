@@ -1,4 +1,4 @@
-import { Container } from "@mantine/core"
+import { Stack } from "@mantine/core"
 import CustomSwitch from "../../components/CustomSwitch"
 import CustomNumberInput from "../../components/CustomNumberInput"
 import { useContext } from "react"
@@ -19,7 +19,7 @@ const EventHelper = () => {
         )
     } else if (bsc.settings.game.farmingMode === "Event (Token Drawboxes)") {
         return (
-            <Container>
+            <Stack>
                 <CustomSwitch
                     label="Enable if Event is in different position"
                     description="Enable this to properly select the Event if it is not positioned first on the list of events in the Home Menu."
@@ -42,7 +42,7 @@ const EventHelper = () => {
                     checked={bsc.settings.event.selectBottomCategory}
                     onChange={(checked) => bsc.setSettings({ ...bsc.settings, event: { ...bsc.settings.event, selectBottomCategory: checked } })}
                 />
-            </Container>
+            </Stack>
         )
     } else {
         return null

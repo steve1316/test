@@ -1,4 +1,4 @@
-import { Container } from "@mantine/core"
+import { Stack } from "@mantine/core"
 import CustomSwitch from "../../components/CustomSwitch"
 import CustomNumberInput from "../../components/CustomNumberInput"
 import { useContext } from "react"
@@ -9,7 +9,7 @@ const ProvingGroundsHelper = () => {
 
     if (bsc.settings.game.farmingMode === "Proving Grounds") {
         return (
-            <Container>
+            <Stack>
                 <CustomSwitch
                     label="Enable if Proving Grounds is in different position"
                     description="Enable this to properly select Proving Grounds if it is not positioned first on the list of events in the Home Menu."
@@ -27,7 +27,7 @@ const ProvingGroundsHelper = () => {
                         description="Default is the first position or the value of 0"
                     />
                 ) : null}
-            </Container>
+            </Stack>
         )
     } else {
         return null

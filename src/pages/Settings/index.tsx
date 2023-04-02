@@ -1,4 +1,4 @@
-import { Container, createStyles, Grid, Button, Modal, Group, Divider, FileInput } from "@mantine/core"
+import { Container, createStyles, Grid, Button, Modal, Group, Divider, FileInput, Stack } from "@mantine/core"
 import { useContext, useState, useEffect } from "react"
 import { CustomSelect, DataProps } from "../../components/CustomSelect"
 import CustomSwitch from "../../components/CustomSwitch"
@@ -320,7 +320,7 @@ const Settings = () => {
                 bsc.settings.game.farmingMode === "Rise of the Beasts" ||
                 bsc.settings.game.farmingMode === "Xeno Clash" ? (
                     <>
-                        <Grid.Col span={6}>
+                        <Grid.Col span={6} sx={{ marginLeft: 0 }}>
                             <CustomSwitch
                                 label="Enable Nightmare Settings"
                                 description="Enable additional settings to show up in the Extra Settings page."
@@ -425,7 +425,7 @@ const Settings = () => {
                     <Grid.Col id="gridItemGroup" span={4}>
                         <CustomNumberInput
                             label="Group #"
-                            description={`Set A: 1 to 7\nSet B: 8 to 14`}
+                            description={`Set A: 1 to 7 -- Set B: 8 to 14`}
                             value={bsc.settings.game.groupNumber}
                             onChange={(value) => bsc.setSettings({ ...bsc.settings, game: { ...bsc.settings.game, groupNumber: value } })}
                             min={1}
@@ -449,27 +449,27 @@ const Settings = () => {
 
     return (
         <Container className={classes.container}>
-            {renderCombatScriptSetting()}
+            <Stack spacing="xs">
+                {renderCombatScriptSetting()}
 
-            <Divider my="xs" labelPosition="center" label={<Icon icon="material-symbols:settings" height={25} width={25} style={{ color: "purple" }} />} />
+                <Divider my="xs" labelPosition="center" label={<Icon icon="material-symbols:settings" height={25} width={25} style={{ color: "purple" }} />} />
 
-            {renderFarmingModeSetting()}
-            {renderItemSetting()}
-            {renderMissionSetting()}
-            {renderItemAmountSetting()}
-            {renderSummonSetting()}
-            {renderGroupPartySettings()}
+                {renderFarmingModeSetting()}
+                {renderItemSetting()}
+                {renderMissionSetting()}
+                {renderItemAmountSetting()}
+                {renderSummonSetting()}
+                {renderGroupPartySettings()}
 
-            <Divider my="xs" labelPosition="center" label={<Icon icon="material-symbols:settings" height={25} width={25} style={{ color: "purple" }} />} />
+                <Divider my="xs" labelPosition="center" label={<Icon icon="material-symbols:settings" height={25} width={25} style={{ color: "purple" }} />} />
 
-            <Group>
                 <CustomSwitch
                     label="Enabled Debug Mode"
                     description="Enables debugging messages to show up in the log."
                     checked={bsc.settings.game.debugMode}
                     onChange={(checked) => bsc.setSettings({ ...bsc.settings, game: { ...bsc.settings.game, debugMode: checked } })}
                 />
-            </Group>
+            </Stack>
         </Container>
     )
 }

@@ -1,4 +1,4 @@
-import { Container } from "@mantine/core"
+import { Stack } from "@mantine/core"
 import CustomSwitch from "../../components/CustomSwitch"
 import { useContext } from "react"
 import { BotStateContext } from "../../context/BotStateContext"
@@ -8,7 +8,7 @@ const ArcarumSandboxHelper = () => {
 
     if (bsc.settings.game.farmingMode === "Arcarum Sandbox") {
         return (
-            <Container>
+            <Stack>
                 <CustomSwitch
                     label="Enable Defender settings"
                     description="Enable additional settings to show up in the Extra Settings page."
@@ -21,7 +21,7 @@ const ArcarumSandboxHelper = () => {
                     checked={bsc.settings.sandbox.enableGoldChest}
                     onChange={(checked) => bsc.setSettings({ ...bsc.settings, sandbox: { ...bsc.settings.sandbox, enableGoldChest: checked } })}
                 />
-            </Container>
+            </Stack>
         )
     } else {
         return null

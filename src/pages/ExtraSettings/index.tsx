@@ -1,4 +1,4 @@
-import { Container, createStyles, Grid, Button, Modal, Group, FileInput, Textarea, Stack } from "@mantine/core"
+import { Container, createStyles, Grid, Button, Modal, Group, FileInput, Textarea, Stack, Divider } from "@mantine/core"
 import { useContext, useState } from "react"
 import CustomSwitch from "../../components/CustomSwitch"
 import CustomNumberInput from "../../components/CustomNumberInput"
@@ -18,6 +18,9 @@ const ExtraSettings = () => {
             height: "100%",
             padding: "10px 20px 10px 20px",
         },
+        disabledText: {
+            color: theme.colors.gray[7],
+        },
     }))
 
     const { classes } = useStyles()
@@ -30,21 +33,25 @@ const ExtraSettings = () => {
 
     const renderTwitterSettings = () => {
         return (
-            <Container>
-                <Text id="twitter">
-                    Twitter Settings <Icon icon="akar-icons:twitter-fill" className="twitterTitleIcon" />
-                </Text>
-                <Text>Please visit the wiki on the GitHub page for instructions on how to get these keys and tokens.</Text>
+            <Grid>
+                <Grid.Col span={12}>
+                    <Text id="twitter">
+                        Twitter Settings <Icon icon="akar-icons:twitter-fill" className="twitterTitleIcon" />
+                    </Text>
+                    <Text>Please visit the wiki on the GitHub page for instructions on how to get these keys and tokens.</Text>
+                </Grid.Col>
 
-                <Group>
+                <Grid.Col span={12}>
                     <CustomSwitch
                         label="Enable if using Twitter API V2. Disable if using V1.1"
                         description="If enabled, then only the bearer token will be needed. No need for the consumer keys and such."
                         checked={bsc.settings.twitter.twitterUseVersion2}
                         onChange={(checked) => bsc.setSettings({ ...bsc.settings, twitter: { ...bsc.settings.twitter, twitterUseVersion2: checked } })}
                     />
+                </Grid.Col>
 
-                    <Grid justify="center" align="center" grow sx={{ width: "100%" }}>
+                <Grid.Col span={12}>
+                    <Grid grow sx={{ width: "100%" }}>
                         {!bsc.settings.twitter.twitterUseVersion2 ? (
                             <>
                                 <Grid.Col span={6}>
@@ -102,28 +109,32 @@ const ExtraSettings = () => {
                             </Button>
                         </Grid.Col>
                     </Grid>
-                </Group>
-            </Container>
+                </Grid.Col>
+            </Grid>
         )
     }
 
     const renderDiscordSettings = () => {
         return (
-            <Container>
-                <Text id="discord">
-                    Discord Settings <Icon icon="akar-icons:discord-fill" className="discordTitleIcon" />
-                </Text>
-                <Text>Please visit the wiki on the GitHub page for instructions on how to get the token and user ID.</Text>
+            <Grid>
+                <Grid.Col span={12}>
+                    <Text id="discord">
+                        Discord Settings <Icon icon="akar-icons:discord-fill" className="discordTitleIcon" />
+                    </Text>
+                    <Text>Please visit the wiki on the GitHub page for instructions on how to get the token and user ID.</Text>
+                </Grid.Col>
 
-                <Group>
+                <Grid.Col span={12}>
                     <CustomSwitch
                         label="Enable Discord Notifications"
                         description="Enable notifications of loot drops and errors encountered by the bot via Discord DMs."
                         checked={bsc.settings.discord.enableDiscordNotifications}
                         onChange={(checked) => bsc.setSettings({ ...bsc.settings, discord: { ...bsc.settings.discord, enableDiscordNotifications: checked } })}
                     />
+                </Grid.Col>
 
-                    <Grid justify="center" align="center" grow sx={{ width: "100%" }}>
+                <Grid.Col span={12}>
+                    <Grid grow sx={{ width: "100%" }}>
                         {bsc.settings.discord.enableDiscordNotifications ? (
                             <>
                                 <Grid.Col span={6}>
@@ -152,24 +163,26 @@ const ExtraSettings = () => {
                             </>
                         ) : null}
                     </Grid>
-                </Group>
-            </Container>
+                </Grid.Col>
+            </Grid>
         )
     }
 
     const renderConfigurationSettings = () => {
         return (
-            <Container>
-                <Text id="configuration">
-                    Configuration Settings <Icon icon="icon-park-outline:setting-config" className="sectionTitleIcon" />
-                </Text>
-                <Text>
-                    The following setting below is useful if you have a fast enough connection that pages load almost instantly. If the amount selected reduces the delay to the negatives, then it will
-                    default back to its original delay. Beware that changing this setting may lead to unintended behavior as the bot will be going faster, depending on how much you reduce each delay
-                    by.
-                </Text>
+            <Grid>
+                <Grid.Col span={12}>
+                    <Text id="configuration">
+                        Configuration Settings <Icon icon="icon-park-outline:setting-config" className="sectionTitleIcon" />
+                    </Text>
+                    <Text>
+                        The following setting below is useful if you have a fast enough connection that pages load almost instantly. If the amount selected reduces the delay to the negatives, then it
+                        will default back to its original delay. Beware that changing this setting may lead to unintended behavior as the bot will be going faster, depending on how much you reduce
+                        each delay by.
+                    </Text>
+                </Grid.Col>
 
-                <Stack align={"flex-start"}>
+                <Grid.Col span={6}>
                     <CustomNumberInput
                         label="Reduce Delays by X Seconds"
                         value={bsc.settings.configuration.reduceDelaySeconds}
@@ -178,175 +191,201 @@ const ExtraSettings = () => {
                         step={0.01}
                         description="Reduces each delay across the whole application by X amount of seconds."
                     />
+                </Grid.Col>
+                <Grid.Col span={6} />
 
-                    <CustomSwitch
-                        label="Enable Bezier Curve Mouse Movement"
-                        description="Enable this option to have slow but human-like mouse movement. Disable this for fast but bot-like mouse movement. Note that enabling this will disable the Mouse Speed setting."
-                        checked={bsc.settings.configuration.enableBezierCurveMouseMovement}
-                        onChange={(checked) => bsc.setSettings({ ...bsc.settings, configuration: { ...bsc.settings.configuration, enableBezierCurveMouseMovement: checked } })}
-                    />
-
-                    {!bsc.settings.configuration.enableBezierCurveMouseMovement ? (
-                        <CustomNumberInput
-                            label="Mouse Speed"
-                            value={bsc.settings.configuration.mouseSpeed}
-                            onChange={(value) => bsc.setSettings({ ...bsc.settings, configuration: { ...bsc.settings.configuration, mouseSpeed: value } })}
-                            min={0}
-                            step={0.01}
-                            description="Set how fast a mouse operation finishes."
-                        />
-                    ) : null}
-
-                    <CustomSwitch
-                        label="Enable Delay Between Runs"
-                        description="Enable delay in seconds between runs to serve as a resting period."
-                        checked={bsc.settings.configuration.enableDelayBetweenRuns}
-                        onChange={(checked) => {
-                            if (checked && bsc.settings.configuration.enableRandomizedDelayBetweenRuns) {
-                                bsc.setSettings({ ...bsc.settings, configuration: { ...bsc.settings.configuration, enableRandomizedDelayBetweenRuns: false } })
-                            }
-
-                            bsc.setSettings({ ...bsc.settings, configuration: { ...bsc.settings.configuration, enableDelayBetweenRuns: checked } })
-                        }}
-                    />
-
-                    {bsc.settings.configuration.enableDelayBetweenRuns && !bsc.settings.configuration.enableRandomizedDelayBetweenRuns ? (
-                        <CustomNumberInput
-                            label="Delay In Seconds"
-                            value={bsc.settings.configuration.delayBetweenRuns}
-                            onChange={(value) => bsc.setSettings({ ...bsc.settings, configuration: { ...bsc.settings.configuration, delayBetweenRuns: value } })}
-                            min={0}
-                            step={0.01}
-                            description="Set the delay in seconds for the resting period."
-                        />
-                    ) : null}
-
-                    <CustomSwitch
-                        label="Enable Randomized Delay Between Runs"
-                        description="Enable randomized delay in seconds between runs to serve as a resting period."
-                        checked={bsc.settings.configuration.enableRandomizedDelayBetweenRuns}
-                        onChange={(checked) => {
-                            if (checked && bsc.settings.configuration.enableDelayBetweenRuns) {
-                                bsc.setSettings({ ...bsc.settings, configuration: { ...bsc.settings.configuration, enableDelayBetweenRuns: false } })
-                            }
-
-                            bsc.setSettings({ ...bsc.settings, configuration: { ...bsc.settings.configuration, enableRandomizedDelayBetweenRuns: checked } })
-                        }}
-                    />
-
-                    {!bsc.settings.configuration.enableDelayBetweenRuns && bsc.settings.configuration.enableRandomizedDelayBetweenRuns ? (
-                        <Grid sx={{ width: "100%" }}>
-                            <Grid.Col span={6}>
+                <Grid.Col span={12}>
+                    <Grid>
+                        <Grid.Col span={6}>
+                            <CustomSwitch
+                                label="Enable Bezier Curve Mouse Movement"
+                                description="Enable this option to have slow but human-like mouse movement. Disable this for fast but bot-like mouse movement. Note that enabling this will disable the Mouse Speed setting."
+                                checked={bsc.settings.configuration.enableBezierCurveMouseMovement}
+                                onChange={(checked) => bsc.setSettings({ ...bsc.settings, configuration: { ...bsc.settings.configuration, enableBezierCurveMouseMovement: checked } })}
+                            />
+                        </Grid.Col>
+                        <Grid.Col span={6}>
+                            {!bsc.settings.configuration.enableBezierCurveMouseMovement ? (
                                 <CustomNumberInput
-                                    label="Delay In Seconds Lower Bound"
-                                    value={bsc.settings.configuration.delayBetweenRunsLowerBound}
-                                    onChange={(value) => {
-                                        // Perform validation so that the value does not violate the opposing bound.
-                                        if (value > bsc.settings.configuration.delayBetweenRunsUpperBound) {
-                                            bsc.setSettings({
-                                                ...bsc.settings,
-                                                configuration: { ...bsc.settings.configuration, delayBetweenRunsLowerBound: bsc.settings.configuration.delayBetweenRunsUpperBound },
-                                            })
-                                        } else {
-                                            bsc.setSettings({ ...bsc.settings, configuration: { ...bsc.settings.configuration, delayBetweenRunsLowerBound: value } })
-                                        }
-                                    }}
-                                    min={1}
+                                    label="Mouse Speed"
+                                    value={bsc.settings.configuration.mouseSpeed}
+                                    onChange={(value) => bsc.setSettings({ ...bsc.settings, configuration: { ...bsc.settings.configuration, mouseSpeed: value } })}
+                                    min={0}
                                     step={0.01}
-                                    description="Set the Lower Bound for the resting period."
+                                    description="Set how fast a mouse operation finishes."
                                 />
-                            </Grid.Col>
-                            <Grid.Col span={6}>
+                            ) : null}
+                        </Grid.Col>
+
+                        <Grid.Col span={6}>
+                            <CustomSwitch
+                                label="Enable Delay Between Runs"
+                                description="Enable delay in seconds between runs to serve as a resting period."
+                                checked={bsc.settings.configuration.enableDelayBetweenRuns}
+                                onChange={(checked) => {
+                                    if (checked && bsc.settings.configuration.enableRandomizedDelayBetweenRuns) {
+                                        bsc.setSettings({ ...bsc.settings, configuration: { ...bsc.settings.configuration, enableDelayBetweenRuns: true, enableRandomizedDelayBetweenRuns: false } })
+                                    } else {
+                                        bsc.setSettings({ ...bsc.settings, configuration: { ...bsc.settings.configuration, enableDelayBetweenRuns: checked } })
+                                    }
+                                }}
+                            />
+                        </Grid.Col>
+                        <Grid.Col span={6}>
+                            {bsc.settings.configuration.enableDelayBetweenRuns && !bsc.settings.configuration.enableRandomizedDelayBetweenRuns ? (
                                 <CustomNumberInput
-                                    label="Delay In Seconds Upper Bound"
-                                    value={bsc.settings.configuration.delayBetweenRunsUpperBound}
-                                    onChange={(value) => {
-                                        // Perform validation so that the value does not violate the opposing bound.
-                                        if (value < bsc.settings.configuration.delayBetweenRunsLowerBound) {
-                                            bsc.setSettings({
-                                                ...bsc.settings,
-                                                configuration: { ...bsc.settings.configuration, delayBetweenRunsUpperBound: bsc.settings.configuration.delayBetweenRunsLowerBound },
-                                            })
-                                        } else {
-                                            bsc.setSettings({ ...bsc.settings, configuration: { ...bsc.settings.configuration, delayBetweenRunsUpperBound: value } })
-                                        }
-                                    }}
-                                    min={1}
+                                    label="Delay In Seconds"
+                                    value={bsc.settings.configuration.delayBetweenRuns}
+                                    onChange={(value) => bsc.setSettings({ ...bsc.settings, configuration: { ...bsc.settings.configuration, delayBetweenRuns: value } })}
+                                    min={0}
                                     step={0.01}
-                                    description="Set the Upper Bound for the resting period."
+                                    description="Set the delay in seconds for the resting period."
                                 />
-                            </Grid.Col>
-                        </Grid>
-                    ) : null}
+                            ) : null}
+                        </Grid.Col>
 
-                    <CustomSwitch
-                        label="Enable Auto Exiting Raids"
-                        description="Enables backing out of a Raid without retreating while under Semi/Full Auto after a certain period of time has passed."
-                        checked={bsc.settings.raid.enableAutoExitRaid}
-                        onChange={(checked) => {
-                            bsc.setSettings({ ...bsc.settings, raid: { ...bsc.settings.raid, enableAutoExitRaid: checked } })
-                        }}
-                    />
+                        <Grid.Col span={6}>
+                            <CustomSwitch
+                                label="Enable Randomized Delay Between Runs"
+                                description="Enable randomized delay in seconds between runs to serve as a resting period."
+                                checked={bsc.settings.configuration.enableRandomizedDelayBetweenRuns}
+                                onChange={(checked) => {
+                                    if (checked && bsc.settings.configuration.enableDelayBetweenRuns) {
+                                        bsc.setSettings({ ...bsc.settings, configuration: { ...bsc.settings.configuration, enableDelayBetweenRuns: false, enableRandomizedDelayBetweenRuns: true } })
+                                    } else {
+                                        bsc.setSettings({ ...bsc.settings, configuration: { ...bsc.settings.configuration, enableRandomizedDelayBetweenRuns: checked } })
+                                    }
+                                }}
+                            />
+                        </Grid.Col>
+                        <Grid.Col span={12}>
+                            {!bsc.settings.configuration.enableDelayBetweenRuns && bsc.settings.configuration.enableRandomizedDelayBetweenRuns ? (
+                                <Grid sx={{ width: "100%" }}>
+                                    <Grid.Col span={6}>
+                                        <CustomNumberInput
+                                            label="Delay In Seconds Lower Bound"
+                                            value={bsc.settings.configuration.delayBetweenRunsLowerBound}
+                                            onChange={(value) => {
+                                                // Perform validation so that the value does not violate the opposing bound.
+                                                if (value > bsc.settings.configuration.delayBetweenRunsUpperBound) {
+                                                    bsc.setSettings({
+                                                        ...bsc.settings,
+                                                        configuration: { ...bsc.settings.configuration, delayBetweenRunsLowerBound: bsc.settings.configuration.delayBetweenRunsUpperBound },
+                                                    })
+                                                } else {
+                                                    bsc.setSettings({ ...bsc.settings, configuration: { ...bsc.settings.configuration, delayBetweenRunsLowerBound: value } })
+                                                }
+                                            }}
+                                            min={1}
+                                            step={0.01}
+                                            description="Set the Lower Bound for the resting period."
+                                        />
+                                    </Grid.Col>
+                                    <Grid.Col span={6}>
+                                        <CustomNumberInput
+                                            label="Delay In Seconds Upper Bound"
+                                            value={bsc.settings.configuration.delayBetweenRunsUpperBound}
+                                            onChange={(value) => {
+                                                // Perform validation so that the value does not violate the opposing bound.
+                                                if (value < bsc.settings.configuration.delayBetweenRunsLowerBound) {
+                                                    bsc.setSettings({
+                                                        ...bsc.settings,
+                                                        configuration: { ...bsc.settings.configuration, delayBetweenRunsUpperBound: bsc.settings.configuration.delayBetweenRunsLowerBound },
+                                                    })
+                                                } else {
+                                                    bsc.setSettings({ ...bsc.settings, configuration: { ...bsc.settings.configuration, delayBetweenRunsUpperBound: value } })
+                                                }
+                                            }}
+                                            min={1}
+                                            step={0.01}
+                                            description="Set the Upper Bound for the resting period."
+                                        />
+                                    </Grid.Col>
+                                </Grid>
+                            ) : null}
+                        </Grid.Col>
 
-                    {bsc.settings.raid.enableAutoExitRaid ? (
-                        <CustomNumberInput
-                            label="Max Time Allowed for Semi/Full Auto"
-                            value={bsc.settings.raid.timeAllowedUntilAutoExitRaid}
-                            onChange={(value) => bsc.setSettings({ ...bsc.settings, raid: { ...bsc.settings.raid, timeAllowedUntilAutoExitRaid: value } })}
-                            min={1}
-                            max={15}
-                            description="Set the maximum amount of minutes to be in a Raid while under Semi/Full Auto before moving on to the next Raid."
-                        />
-                    ) : null}
+                        <Grid.Col span={6}>
+                            <CustomSwitch
+                                label="Enable Auto Exiting Raids"
+                                description="Enables backing out of a Raid without retreating while under Semi/Full Auto after a certain period of time has passed."
+                                checked={bsc.settings.raid.enableAutoExitRaid}
+                                onChange={(checked) => {
+                                    bsc.setSettings({ ...bsc.settings, raid: { ...bsc.settings.raid, enableAutoExitRaid: checked } })
+                                }}
+                            />
+                        </Grid.Col>
+                        <Grid.Col span={6}>
+                            {bsc.settings.raid.enableAutoExitRaid ? (
+                                <CustomNumberInput
+                                    label="Max Time Allowed for Semi/Full Auto"
+                                    value={bsc.settings.raid.timeAllowedUntilAutoExitRaid}
+                                    onChange={(value) => bsc.setSettings({ ...bsc.settings, raid: { ...bsc.settings.raid, timeAllowedUntilAutoExitRaid: value } })}
+                                    min={1}
+                                    max={15}
+                                    description="Set the maximum amount of minutes to be in a Raid while under Semi/Full Auto before moving on to the next Raid."
+                                />
+                            ) : null}
+                        </Grid.Col>
 
-                    <CustomSwitch
-                        label="Enable No Timeout"
-                        description="Enable no timeouts when attempting to farm Raids that appear infrequently."
-                        checked={bsc.settings.raid.enableNoTimeout}
-                        onChange={(checked) => bsc.setSettings({ ...bsc.settings, raid: { ...bsc.settings.raid, enableNoTimeout: checked } })}
-                    />
-
-                    <CustomSwitch
-                        label="Enable Refreshing during Combat"
-                        description="Enables the ability to refresh to speed up Combat Mode whenever the Attack button disappears when it is pressed or during Full/Semi Auto. This option takes precedence above any
+                        <Grid.Col span={6}>
+                            <CustomSwitch
+                                label="Enable No Timeout"
+                                description="Enable no timeouts when attempting to farm Raids that appear infrequently."
+                                checked={bsc.settings.raid.enableNoTimeout}
+                                onChange={(checked) => bsc.setSettings({ ...bsc.settings, raid: { ...bsc.settings.raid, enableNoTimeout: checked } })}
+                            />
+                        </Grid.Col>
+                        <Grid.Col span={6}>
+                            <CustomSwitch
+                                label="Enable Refreshing during Combat"
+                                description="Enables the ability to refresh to speed up Combat Mode whenever the Attack button disappears when it is pressed or during Full/Semi Auto. This option takes precedence above any
                         other related setting to reloading during combat except via the reload command in a script."
-                        checked={bsc.settings.configuration.enableRefreshDuringCombat}
-                        onChange={(checked) => bsc.setSettings({ ...bsc.settings, configuration: { ...bsc.settings.configuration, enableRefreshDuringCombat: checked } })}
-                    />
+                                checked={bsc.settings.configuration.enableRefreshDuringCombat}
+                                onChange={(checked) => bsc.setSettings({ ...bsc.settings, configuration: { ...bsc.settings.configuration, enableRefreshDuringCombat: checked } })}
+                            />
+                        </Grid.Col>
 
-                    <CustomSwitch
-                        label="Enable Automatic Quick Summon during Full/Semi Auto"
-                        description='Enables the ability to automatically use Quick Summon during Full/Semi Auto. Note that this option only takes into effect when "Enable Refreshing during Combat" is turned on
+                        <Grid.Col span={6}>
+                            <CustomSwitch
+                                label="Enable Automatic Quick Summon during Full/Semi Auto"
+                                description='Enables the ability to automatically use Quick Summon during Full/Semi Auto. Note that this option only takes into effect when "Enable Refreshing during Combat" is turned on
                         and that the bot is fighting a battle that is compatible with refreshing during combat.'
-                        checked={bsc.settings.configuration.enableAutoQuickSummon}
-                        onChange={(checked) => bsc.setSettings({ ...bsc.settings, configuration: { ...bsc.settings.configuration, enableAutoQuickSummon: checked } })}
-                    />
-
-                    <CustomSwitch
-                        label="Enable Bypassing Reset Summon Procedure"
-                        description="Enables bypassing the bot resetting Summons if there are none of your chosen found during Summon Selection. The bot will reload the page and select the very first summon at the
+                                checked={bsc.settings.configuration.enableAutoQuickSummon}
+                                onChange={(checked) => bsc.setSettings({ ...bsc.settings, configuration: { ...bsc.settings.configuration, enableAutoQuickSummon: checked } })}
+                            />
+                        </Grid.Col>
+                        <Grid.Col span={6}>
+                            <CustomSwitch
+                                label="Enable Bypassing Reset Summon Procedure"
+                                description="Enables bypassing the bot resetting Summons if there are none of your chosen found during Summon Selection. The bot will reload the page and select the very first summon at the
                         top of the list."
-                        checked={bsc.settings.configuration.enableBypassResetSummon}
-                        onChange={(checked) => bsc.setSettings({ ...bsc.settings, configuration: { ...bsc.settings.configuration, enableBypassResetSummon: checked } })}
-                    />
+                                checked={bsc.settings.configuration.enableBypassResetSummon}
+                                onChange={(checked) => bsc.setSettings({ ...bsc.settings, configuration: { ...bsc.settings.configuration, enableBypassResetSummon: checked } })}
+                            />
+                        </Grid.Col>
 
-                    <CustomSwitch
-                        label="Enable static window calibration"
-                        description="Enable calibration of game window to be static. This will assume that you do not move the game window around during the bot process. Otherwise, the bot will not see where to go
+                        <Grid.Col span={6}>
+                            <CustomSwitch
+                                label="Enable static window calibration"
+                                description="Enable calibration of game window to be static. This will assume that you do not move the game window around during the bot process. Otherwise, the bot will not see where to go
                         next. Disable to have the whole computer screen act as the game window and you can move around the window during the bot process as you wish."
-                        checked={bsc.settings.configuration.staticWindow}
-                        onChange={(checked) => bsc.setSettings({ ...bsc.settings, configuration: { ...bsc.settings.configuration, staticWindow: checked } })}
-                    />
-
-                    <CustomSwitch
-                        label="Enable attempt at bypassing possible bot detection via mouse"
-                        description="Enable attempt at bypassing possible bot detection via mouse. What this does is moves the mouse off of the game window after every run and waits several seconds there before
+                                checked={bsc.settings.configuration.staticWindow}
+                                onChange={(checked) => bsc.setSettings({ ...bsc.settings, configuration: { ...bsc.settings.configuration, staticWindow: checked } })}
+                            />
+                        </Grid.Col>
+                        <Grid.Col span={6}>
+                            <CustomSwitch
+                                label="Enable attempt at bypassing possible bot detection via mouse"
+                                description="Enable attempt at bypassing possible bot detection via mouse. What this does is moves the mouse off of the game window after every run and waits several seconds there before
                         resuming bot operations. Additionally, this also makes it so that the same thing happens at the very end of operations before shutting down."
-                        checked={bsc.settings.configuration.enableMouseSecurityAttemptBypass}
-                        onChange={(checked) => bsc.setSettings({ ...bsc.settings, configuration: { ...bsc.settings.configuration, enableMouseSecurityAttemptBypass: checked } })}
-                    />
-                </Stack>
-            </Container>
+                                checked={bsc.settings.configuration.enableMouseSecurityAttemptBypass}
+                                onChange={(checked) => bsc.setSettings({ ...bsc.settings, configuration: { ...bsc.settings.configuration, enableMouseSecurityAttemptBypass: checked } })}
+                            />
+                        </Grid.Col>
+                    </Grid>
+                </Grid.Col>
+            </Grid>
         )
     }
 
@@ -369,22 +408,26 @@ const ExtraSettings = () => {
             }
 
             return (
-                <Container>
-                    <Text id="nightmare">
-                        {title} Settings <Icon icon="ri:sword-fill" className="sectionTitleIcon" />
-                    </Text>
-                    <Text>If none of these settings are changed, then the bot will reuse the settings for the Farming Mode.</Text>
+                <Grid>
+                    <Grid.Col span={12}>
+                        <Text id="nightmare">
+                            {title} Settings <Icon icon="ri:sword-fill" className="sectionTitleIcon" />
+                        </Text>
+                        <Text>If none of these settings are changed, then the bot will reuse the settings for the Farming Mode.</Text>
+                    </Grid.Col>
 
-                    <Group>
+                    <Grid.Col span={12}>
                         <CustomSwitch
                             label={`Enable Custom Settings for ${title}`}
                             description={`Enable customizing individual settings for ${title}`}
                             checked={bsc.settings.nightmare.enableCustomNightmareSettings}
-                            onChange={(checked) => bsc.setSettings({ ...bsc.settings, configuration: { ...bsc.settings.configuration, enableMouseSecurityAttemptBypass: checked } })}
+                            onChange={(checked) => bsc.setSettings({ ...bsc.settings, nightmare: { ...bsc.settings.nightmare, enableCustomNightmareSettings: checked } })}
                         />
+                    </Grid.Col>
 
+                    <Grid.Col span={12}>
                         {bsc.settings.nightmare.enableCustomNightmareSettings ? (
-                            <Stack align={"flex-start"}>
+                            <Stack>
                                 {!bsc.settings.misc.alternativeCombatScriptSelector ? (
                                     <FileInput
                                         placeholder="None Selected"
@@ -443,156 +486,172 @@ const ExtraSettings = () => {
                                 </Grid>
                             </Stack>
                         ) : null}
-                    </Group>
-                </Container>
+                    </Grid.Col>
+                </Grid>
             )
         } else {
             return (
-                <Container>
-                    <Text id="nightmare">
-                        Nightmare Settings <Icon icon="ri:sword-fill" className="sectionTitleIcon" />
-                    </Text>
-                    <Text>Current Farming Mode either does not support Nightmares or the "Enable Nightmare Settings" option in the Settings page was not enabled.</Text>
-                </Container>
+                <Grid>
+                    <Grid.Col span={12}>
+                        <Text id="nightmare">
+                            Nightmare Settings <Icon icon="ri:sword-fill" className="sectionTitleIcon" />
+                        </Text>
+                        <Text className={classes.disabledText}>
+                            Current Farming Mode either does not support Nightmares or the "Enable Nightmare Settings" option in the Settings page was not enabled.
+                        </Text>
+                    </Grid.Col>
+                </Grid>
             )
         }
     }
 
     const renderMiscSettings = () => {
         return (
-            <Container>
-                <Text id="misc">
-                    Misc Settings <Icon icon="dashicons:admin-settings" className="sectionTitleIcon" />
-                </Text>
+            <Grid>
+                <Grid.Col span={12}>
+                    <Text id="misc">
+                        Misc Settings <Icon icon="dashicons:admin-settings" className="sectionTitleIcon" />
+                    </Text>
+                </Grid.Col>
 
-                <Group>
+                <Grid.Col span={12}>
                     <CustomSwitch
                         label="Enable Alternative File Picker for Combat Script selection"
                         description="Enable this if the regular method of combat script selection failed."
                         checked={bsc.settings.misc.alternativeCombatScriptSelector}
                         onChange={(checked) => bsc.setSettings({ ...bsc.settings, misc: { ...bsc.settings.misc, alternativeCombatScriptSelector: checked } })}
                     />
-                </Group>
-            </Container>
+                </Grid.Col>
+            </Grid>
         )
     }
 
     const renderSandboxDefenderSettings = () => {
         if (bsc.settings.sandbox.enableDefender && bsc.settings.game.farmingMode === "Arcarum Sandbox") {
             return (
-                <Container>
-                    <Text id="defender">
-                        Defender Settings <Icon icon="ri:sword-fill" className="sectionTitleIcon" />
-                    </Text>
-                    <Text>If none of these settings are changed, then the bot will reuse the settings for the Farming Mode.</Text>
+                <Grid>
+                    <Grid.Col span={12}>
+                        <Text id="defender">
+                            Defender Settings <Icon icon="ri:sword-fill" className="sectionTitleIcon" />
+                        </Text>
+                        <Text>If none of these settings are changed, then the bot will reuse the settings for the Farming Mode.</Text>
+                    </Grid.Col>
 
-                    <Group>
-                        <CustomSwitch
-                            label="Enable Custom Settings for Defender"
-                            description="Enable customizing individual settings for Defender"
-                            checked={bsc.settings.sandbox.enableCustomDefenderSettings}
-                            onChange={(checked) => bsc.setSettings({ ...bsc.settings, sandbox: { ...bsc.settings.sandbox, enableCustomDefenderSettings: checked } })}
-                        />
+                    <Grid.Col span={12}>
+                        <Stack>
+                            <CustomSwitch
+                                label="Enable Custom Settings for Defender"
+                                description="Enable customizing individual settings for Defender"
+                                checked={bsc.settings.sandbox.enableCustomDefenderSettings}
+                                onChange={(checked) => bsc.setSettings({ ...bsc.settings, sandbox: { ...bsc.settings.sandbox, enableCustomDefenderSettings: checked } })}
+                            />
 
-                        {bsc.settings.sandbox.enableCustomDefenderSettings ? (
-                            <Stack align={"flex-start"}>
-                                {!bsc.settings.misc.alternativeCombatScriptSelector ? (
-                                    <FileInput
-                                        placeholder="None Selected"
-                                        label="Defender Combat Script"
-                                        description="Select a Combat Script text file."
-                                        value={bsc.combatScriptFile}
-                                        onChange={(file) => {
-                                            loadCombatScript(bsc, file)
-                                            if (file !== null) bsc.setCombatScriptFile(file)
-                                            else bsc.setCombatScriptFile(undefined)
-                                        }}
-                                        clearable
-                                    />
-                                ) : (
-                                    <FileInput
-                                        placeholder="None Selected"
-                                        label="Defender Combat Script"
-                                        description="Select a Combat Script text file (alternative method)."
-                                        onChange={(file) => {
-                                            loadCombatScriptAlternative(bsc)
-                                            if (file !== null) bsc.setCombatScriptFile(file)
-                                            else bsc.setCombatScriptFile(undefined)
-                                        }}
-                                        clearable
-                                    />
-                                )}
-
-                                <CustomNumberInput
-                                    label="How many times to run"
-                                    description="Set how many defenders the bot should fight."
-                                    value={bsc.settings.sandbox.numberOfDefenders}
-                                    onChange={(value) => bsc.setSettings({ ...bsc.settings, sandbox: { ...bsc.settings.sandbox, numberOfDefenders: value } })}
-                                    min={1}
-                                />
-
-                                <Grid justify="center" align="center">
-                                    <Grid.Col id="gridItemDefenderGroup" span={4}>
-                                        <CustomNumberInput
-                                            label="Group #"
-                                            description={`Set A: 1 to 7\nSet B: 8 to 14`}
-                                            value={bsc.settings.sandbox.defenderGroupNumber}
-                                            onChange={(value) => bsc.setSettings({ ...bsc.settings, sandbox: { ...bsc.settings.sandbox, defenderGroupNumber: value } })}
-                                            min={1}
-                                            max={14}
+                            {bsc.settings.sandbox.enableCustomDefenderSettings ? (
+                                <Stack align={"flex-start"}>
+                                    {!bsc.settings.misc.alternativeCombatScriptSelector ? (
+                                        <FileInput
+                                            placeholder="None Selected"
+                                            label="Defender Combat Script"
+                                            description="Select a Combat Script text file."
+                                            value={bsc.combatScriptFile}
+                                            onChange={(file) => {
+                                                loadCombatScript(bsc, file)
+                                                if (file !== null) bsc.setCombatScriptFile(file)
+                                                else bsc.setCombatScriptFile(undefined)
+                                            }}
+                                            clearable
                                         />
-                                    </Grid.Col>
-                                    <Grid.Col id="gridItemDefenderParty" span={4} offset={4}>
-                                        <CustomNumberInput
-                                            label="Party #"
-                                            description="From 1 to 6"
-                                            value={bsc.settings.sandbox.defenderPartyNumber}
-                                            onChange={(value) => bsc.setSettings({ ...bsc.settings, sandbox: { ...bsc.settings.sandbox, defenderPartyNumber: value } })}
-                                            min={1}
-                                            max={6}
+                                    ) : (
+                                        <FileInput
+                                            placeholder="None Selected"
+                                            label="Defender Combat Script"
+                                            description="Select a Combat Script text file (alternative method)."
+                                            onChange={(file) => {
+                                                loadCombatScriptAlternative(bsc)
+                                                if (file !== null) bsc.setCombatScriptFile(file)
+                                                else bsc.setCombatScriptFile(undefined)
+                                            }}
+                                            clearable
                                         />
-                                    </Grid.Col>
-                                </Grid>
-                            </Stack>
-                        ) : null}
-                    </Group>
-                </Container>
+                                    )}
+
+                                    <CustomNumberInput
+                                        label="How many times to run"
+                                        description="Set how many defenders the bot should fight."
+                                        value={bsc.settings.sandbox.numberOfDefenders}
+                                        onChange={(value) => bsc.setSettings({ ...bsc.settings, sandbox: { ...bsc.settings.sandbox, numberOfDefenders: value } })}
+                                        min={1}
+                                    />
+
+                                    <Grid justify="center" align="center">
+                                        <Grid.Col id="gridItemDefenderGroup" span={4}>
+                                            <CustomNumberInput
+                                                label="Group #"
+                                                description={`Set A: 1 to 7\nSet B: 8 to 14`}
+                                                value={bsc.settings.sandbox.defenderGroupNumber}
+                                                onChange={(value) => bsc.setSettings({ ...bsc.settings, sandbox: { ...bsc.settings.sandbox, defenderGroupNumber: value } })}
+                                                min={1}
+                                                max={14}
+                                            />
+                                        </Grid.Col>
+                                        <Grid.Col id="gridItemDefenderParty" span={4} offset={4}>
+                                            <CustomNumberInput
+                                                label="Party #"
+                                                description="From 1 to 6"
+                                                value={bsc.settings.sandbox.defenderPartyNumber}
+                                                onChange={(value) => bsc.setSettings({ ...bsc.settings, sandbox: { ...bsc.settings.sandbox, defenderPartyNumber: value } })}
+                                                min={1}
+                                                max={6}
+                                            />
+                                        </Grid.Col>
+                                    </Grid>
+                                </Stack>
+                            ) : null}
+                        </Stack>
+                    </Grid.Col>
+                </Grid>
             )
         } else {
             return (
-                <Container>
-                    <Text id="defender">
-                        Defender Settings <Icon icon="ri:sword-fill" className="sectionTitleIcon" />
-                    </Text>
-                    <Text>Current Farming Mode is not set to "Arcarum Sandbox".</Text>
-                </Container>
+                <Grid>
+                    <Grid.Col span={12}>
+                        <Text id="defender">
+                            Defender Settings <Icon icon="ri:sword-fill" className="sectionTitleIcon" />
+                        </Text>
+                        <Text className={classes.disabledText}>Current Farming Mode is not set to "Arcarum Sandbox".</Text>
+                    </Grid.Col>
+                </Grid>
             )
         }
     }
 
     const renderAPIIntegrationSettings = () => {
         return (
-            <Container>
-                <Text id="api-integration">
-                    API Integration Settings <Icon icon="mdi:api" className="sectionTitleIcon" />
-                </Text>
-                <Text>
-                    You can opt-in to this feature where the bot will automatically send successful results from the Loot Collection process and you can view your results and similar ones over on the
-                    Granblue Automation Statistics website.
-                </Text>
+            <Grid>
+                <Grid.Col span={12}>
+                    <Text id="api-integration">
+                        API Integration Settings <Icon icon="mdi:api" className="sectionTitleIcon" />
+                    </Text>
+                    <Text>
+                        You can opt-in to this feature where the bot will automatically send successful results from the Loot Collection process and you can view your results and similar ones over on
+                        the Granblue Automation Statistics website.
+                    </Text>
+                </Grid.Col>
 
-                <Group>
+                <Grid.Col span={12}>
                     <CustomSwitch
                         label="Enable Opt-in for API Integration"
                         description="Enable API Integration with Granblue Automation Statistics"
                         checked={bsc.settings.api.enableOptInAPI}
                         onChange={(checked) => bsc.setSettings({ ...bsc.settings, api: { ...bsc.settings.api, enableOptInAPI: checked } })}
                     />
+                </Grid.Col>
 
+                <Grid.Col span={12}>
                     {bsc.settings.api.enableOptInAPI ? (
-                        <Stack align={"flex-start"}>
+                        <Stack>
                             <Text>{`How this works:\n\nInput your username and password below that you used to register a new account on the website. The account registered on the website will be used to associate your success results from the Loot Collection process. A success result describes the Loot Collection process detecting a item drop after each run.`}</Text>
-                            <Grid justify="center" align="center" grow sx={{ width: "100%" }}>
+                            <Grid grow sx={{ width: "100%" }}>
                                 <Grid.Col span={6}>
                                     <Textarea
                                         label="Username"
@@ -619,78 +678,86 @@ const ExtraSettings = () => {
                             </Grid>
                         </Stack>
                     ) : null}
-                </Group>
-            </Container>
+                </Grid.Col>
+            </Grid>
         )
     }
 
     const renderDeviceSettings = () => {
         return (
-            <Container>
-                <Text id="device">
-                    Device Settings <Icon icon="ic:baseline-device-unknown" className="sectionTitleIcon" />
-                </Text>
+            <Grid>
+                <Grid.Col span={12}>
+                    <Text id="device">
+                        Device Settings <Icon icon="ic:baseline-device-unknown" className="sectionTitleIcon" />
+                    </Text>
+                </Grid.Col>
 
-                <Group>
+                <Grid.Col span={12}>
                     <CustomSwitch
                         label="Use First Notch instead of the Second"
                         description="Enable this if your screen size is small enough that the second notch makes the game too big. Using the second notch in this case will make the game reasonably fit."
                         checked={bsc.settings.device.useFirstNotch}
                         onChange={(checked) => bsc.setSettings({ ...bsc.settings, device: { ...bsc.settings.device, useFirstNotch: checked } })}
                     />
+                </Grid.Col>
 
+                <Grid.Col span={12}>
                     <Text>
                         Adjust and fine-tune settings related to device setups and image processing optimizations. The first confidence option handles single target template matching and the second
                         confidence option handles multi target template matching, including item detection.
                     </Text>
+                </Grid.Col>
 
-                    <Stack align={"flex-start"}>
-                        <Grid justify="center" align="center" grow sx={{ width: "100%" }}>
-                            <Grid.Col span={6}>
-                                <CustomNumberInput
-                                    label="Set Confidence Level"
-                                    placeholder="Set the default confidence level for single-target image template matching."
-                                    value={bsc.settings.device.confidence}
-                                    onChange={(target) => bsc.setSettings({ ...bsc.settings, device: { ...bsc.settings.device, confidence: target } })}
-                                    min={0.1}
-                                    max={1.0}
-                                    step={0.01}
-                                />
-                            </Grid.Col>
-                            <Grid.Col span={6}>
-                                <CustomNumberInput
-                                    label="Set Confidence Level for Multiple Matching"
-                                    placeholder="Set the default confidence level for multi-target image template matching. Example: Item Detection during Loot Collection"
-                                    value={bsc.settings.device.confidenceAll}
-                                    onChange={(target) => bsc.setSettings({ ...bsc.settings, device: { ...bsc.settings.device, confidenceAll: target } })}
-                                    min={0.1}
-                                    max={1.0}
-                                    step={0.01}
-                                />
-                            </Grid.Col>
-                            <Grid.Col span={6}>
-                                <CustomNumberInput
-                                    label="Set Custom Scale (Highly experimental)"
-                                    placeholder="Set the scale at which to resize existing image assets to match what would be shown on your device. Internally supported are 1080p and 1440p. Highly experimental feature."
-                                    value={bsc.settings.device.customScale}
-                                    onChange={(target) => bsc.setSettings({ ...bsc.settings, device: { ...bsc.settings.device, customScale: target } })}
-                                    min={0.1}
-                                    max={5.0}
-                                    step={0.01}
-                                />
-                            </Grid.Col>
-                            <Grid.Col span={6} />
-                        </Grid>
+                <Grid.Col span={12}>
+                    <Group>
+                        <Stack>
+                            <Grid grow sx={{ width: "100%" }}>
+                                <Grid.Col span={6}>
+                                    <CustomNumberInput
+                                        label="Set Confidence Level"
+                                        placeholder="Set the default confidence level for single-target image template matching."
+                                        value={bsc.settings.device.confidence}
+                                        onChange={(target) => bsc.setSettings({ ...bsc.settings, device: { ...bsc.settings.device, confidence: target } })}
+                                        min={0.1}
+                                        max={1.0}
+                                        step={0.01}
+                                    />
+                                </Grid.Col>
+                                <Grid.Col span={6}>
+                                    <CustomNumberInput
+                                        label="Set Confidence Level for Multiple Matching"
+                                        placeholder="Set the default confidence level for multi-target image template matching. Example: Item Detection during Loot Collection"
+                                        value={bsc.settings.device.confidenceAll}
+                                        onChange={(target) => bsc.setSettings({ ...bsc.settings, device: { ...bsc.settings.device, confidenceAll: target } })}
+                                        min={0.1}
+                                        max={1.0}
+                                        step={0.01}
+                                    />
+                                </Grid.Col>
+                                <Grid.Col span={6}>
+                                    <CustomNumberInput
+                                        label="Set Custom Scale (Highly experimental)"
+                                        placeholder="Set the scale at which to resize existing image assets to match what would be shown on your device. Internally supported are 1080p and 1440p. Highly experimental feature."
+                                        value={bsc.settings.device.customScale}
+                                        onChange={(target) => bsc.setSettings({ ...bsc.settings, device: { ...bsc.settings.device, customScale: target } })}
+                                        min={0.1}
+                                        max={5.0}
+                                        step={0.01}
+                                    />
+                                </Grid.Col>
+                                <Grid.Col span={6} />
+                            </Grid>
 
-                        <CustomSwitch
-                            label="Enable Test for Home Screen"
-                            description={`Enables test for getting to the Home screen instead of the regular bot process. If the test fails, then it will run a different test to find which scale is appropriate for your device.\n\nUseful for troubleshooting working confidences and scales for device compatibility.`}
-                            checked={bsc.settings.device.enableTestForHomeScreen}
-                            onChange={(checked) => bsc.setSettings({ ...bsc.settings, device: { ...bsc.settings.device, enableTestForHomeScreen: checked } })}
-                        />
-                    </Stack>
-                </Group>
-            </Container>
+                            <CustomSwitch
+                                label="Enable Test for Home Screen"
+                                description={`Enables test for getting to the Home screen instead of the regular bot process. If the test fails, then it will run a different test to find which scale is appropriate for your device.\n\nUseful for troubleshooting working confidences and scales for device compatibility.`}
+                                checked={bsc.settings.device.enableTestForHomeScreen}
+                                onChange={(checked) => bsc.setSettings({ ...bsc.settings, device: { ...bsc.settings.device, enableTestForHomeScreen: checked } })}
+                            />
+                        </Stack>
+                    </Group>
+                </Grid.Col>
+            </Grid>
         )
     }
 
@@ -796,14 +863,23 @@ const ExtraSettings = () => {
 
     return (
         <Container className={classes.container}>
-            {renderTwitterSettings()}
-            {renderDiscordSettings()}
-            {renderConfigurationSettings()}
-            {renderNightmareSettings()}
-            {renderMiscSettings()}
-            {renderSandboxDefenderSettings()}
-            {renderAPIIntegrationSettings()}
-            {renderDeviceSettings()}
+            <Stack spacing="xs">
+                {renderTwitterSettings()}
+                <Divider my="xs" />
+                {renderDiscordSettings()}
+                <Divider my="xs" />
+                {renderConfigurationSettings()}
+                <Divider my="xs" />
+                {renderNightmareSettings()}
+                <Divider my="xs" />
+                {renderMiscSettings()}
+                <Divider my="xs" />
+                {renderSandboxDefenderSettings()}
+                <Divider my="xs" />
+                {renderAPIIntegrationSettings()}
+                <Divider my="xs" />
+                {renderDeviceSettings()}
+            </Stack>
         </Container>
     )
 }

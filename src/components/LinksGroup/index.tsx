@@ -4,16 +4,16 @@ import { Icon } from "@iconify/react"
 import { rem } from "@mantine/styles"
 
 interface LinksGroupProps {
-    frontIcon?: string
     label: string
     value: string
+    frontIcon?: string
     initiallyOpened?: boolean
     links?: { label: string; link: string }[]
     active?: string
     setActive?: React.Dispatch<React.SetStateAction<string>>
 }
 
-const LinksGroup = ({ frontIcon = "material-symbols:home-outline", label, value, initiallyOpened, links, active = "Home", setActive = () => {} }: LinksGroupProps) => {
+const LinksGroup = ({ label, value, frontIcon = "material-symbols:home-outline", initiallyOpened, links, active = "Home", setActive = () => {} }: LinksGroupProps) => {
     const useStyles = createStyles((theme) => ({
         control: {
             fontWeight: 500,
@@ -83,6 +83,7 @@ const LinksGroup = ({ frontIcon = "material-symbols:home-outline", label, value,
     ))
 
     const displayChevronIcon = () => {
+        // Display and animate the chevron icon when the tab is made active when it has a list of links.
         if (hasLinks) {
             return theme.dir === "ltr" ? (
                 <Icon
@@ -110,8 +111,9 @@ const LinksGroup = ({ frontIcon = "material-symbols:home-outline", label, value,
         }
     }
 
+    // Collapse the dropdown of links if another tab is selected.
     useEffect(() => {
-        if (label === "Extra Settings" && active !== "Extra Settings") {
+        if ((label === "Extra Settings" && active !== "Extra Settings") || (label === "Adjustments" && active !== "Adjustments")) {
             setOpened(false)
         }
     }, [active])

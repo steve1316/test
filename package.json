@@ -8,7 +8,8 @@
         "dev": "vite",
         "build": "tsc && vite build && tauri build",
         "preview": "vite preview",
-        "tauri": "tauri"
+        "tauri": "tauri",
+        "update": "yarn install && yarn upgrade-interactive"
     },
     "dependencies": {
         "@emotion/react": "^11.10.6",
@@ -18,16 +19,17 @@
         "@tauri-apps/api": "^1.2.0",
         "axios": "^1.3.4",
         "dotenv": "^16.0.3",
-        "react": "^18.2.0",
-        "react-dom": "^18.2.0",
-        "react-hot-toast": "^2.4.0"
+        "react": "^17.0.2",
+        "react-dom": "^17.0.2",
+        "react-hot-toast": "^2.4.0",
+        "ripple-button": "^1.0.9"
     },
     "devDependencies": {
         "@iconify/react": "^4.1.0",
         "@tauri-apps/cli": "^1.2.2",
         "@types/node": "^18.7.10",
-        "@types/react": "^18.0.15",
-        "@types/react-dom": "^18.0.6",
+        "@types/react": "17.0.22",
+        "@types/react-dom": "17.0.19",
         "@vitejs/plugin-react": "^3.0.0",
         "sass": "^1.58.3",
         "typescript": "^4.6.4",

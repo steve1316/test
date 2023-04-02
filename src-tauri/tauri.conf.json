@@ -1,4 +1,8 @@
 {
+    "package": {
+        "productName": "Granblue Automation",
+        "version": "3.0.0"
+    },
     "build": {
         "beforeDevCommand": "yarn dev",
         "beforeBuildCommand": "",
@@ -6,21 +10,35 @@
         "distDir": "../dist",
         "withGlobalTauri": false
     },
-    "package": {
-        "productName": "Granblue Automation",
-        "version": "2.4.0"
-    },
     "tauri": {
         "allowlist": {
             "all": false,
             "shell": {
-                "all": false,
-                "open": true
+                "all": true,
+                "open": true,
+                "scope": [
+                    {
+                        "name": "powershell",
+                        "cmd": "powershell",
+                        "args": true
+                    },
+                    {
+                        "name": "python",
+                        "cmd": "python",
+                        "args": true
+                    }
+                ]
+            },
+            "fs": {
+                "readFile": true,
+                "writeFile": true,
+                "scope": ["backend/settings.json", "backend/*", "backend", "*/**", "*"]
             }
         },
         "bundle": {
             "active": true,
             "icon": ["icons/32x32.png", "icons/128x128.png", "icons/128x128@2x.png", "icons/icon.icns", "icons/icon.ico"],
+            "resources": ["backend/", "images/", "scripts/"],
             "identifier": "com.steve1316.dev",
             "targets": "all"
         },
@@ -29,7 +47,7 @@
         },
         "updater": {
             "active": true,
-            "endpoints": ["https://raw.githubusercontent.com/steve1316/test/main/src-tauri/update.json"],
+            "endpoints": ["https://raw.githubusercontent.com/steve1316/granblue-automation-pyautogui/main/src-tauri/update.json"],
             "dialog": false,
             "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDJGQUVFRURENTFDMTc1ODUKUldTRmRjRlIzZTZ1TDFFSU1YN1ZmVnVYaVM4QUlCUXBUNlFWVTR6bTNpcWhXa2d3ckR1T09JcHMK"
         },
@@ -37,8 +55,8 @@
             {
                 "fullscreen": false,
                 "resizable": true,
-                "title": "tauri-app",
-                "width": 800,
+                "title": "Granblue Automation",
+                "width": 900,
                 "height": 600
             }
         ]

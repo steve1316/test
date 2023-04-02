@@ -1,4 +1,4 @@
-import { Container, createStyles, Grid, Group, Text } from "@mantine/core"
+import { Container, createStyles, Divider, Grid, Stack, Text } from "@mantine/core"
 import { useContext } from "react"
 import CustomSwitch from "../../components/CustomSwitch"
 import CustomNumberInput from "../../components/CustomNumberInput"
@@ -19,19 +19,23 @@ const Adjustments = () => {
 
     const renderStart = () => {
         return (
-            <Container>
-                <Text id="start-calibration">Starting Calibration</Text>
+            <Grid>
+                <Grid.Col span={12}>
+                    <Text id="starting-calibration">Starting Calibration</Text>
+                </Grid.Col>
 
-                <Group>
+                <Grid.Col span={12}>
                     <CustomSwitch
                         label="Enable Starting Calibration Adjustments"
                         description="Enable adjustment of tries for Starting Calibration."
                         checked={bsc.settings.adjustment.enableCalibrationAdjustment}
                         onChange={(checked) => bsc.setSettings({ ...bsc.settings, adjustment: { ...bsc.settings.adjustment, enableCalibrationAdjustment: checked } })}
                     />
+                </Grid.Col>
 
+                <Grid.Col span={12}>
                     {bsc.settings.adjustment.enableCalibrationAdjustment ? (
-                        <Grid justify="center" align="center" grow sx={{ width: "100%" }}>
+                        <Grid grow sx={{ width: "100%" }}>
                             <Grid.Col span={6}>
                                 <CustomNumberInput
                                     label="Home Calibration"
@@ -45,17 +49,19 @@ const Adjustments = () => {
                             <Grid.Col span={6} />
                         </Grid>
                     ) : null}
-                </Group>
-            </Container>
+                </Grid.Col>
+            </Grid>
         )
     }
 
     const renderGeneral = () => {
         return (
-            <Container>
-                <Text id="general-image-searching">General Image Searching</Text>
+            <Grid>
+                <Grid.Col span={12}>
+                    <Text id="general-image-searching">General Image Searching</Text>
+                </Grid.Col>
 
-                <Group>
+                <Grid.Col span={12}>
                     <CustomSwitch
                         label="Enable General Image Searching Adjustments"
                         description="Enable adjustment of tries for General. This encompasses a vast majority of the image processing operations of the bot so adjusting these will greatly affect the average
@@ -63,9 +69,11 @@ const Adjustments = () => {
                         checked={bsc.settings.adjustment.enableGeneralAdjustment}
                         onChange={(checked) => bsc.setSettings({ ...bsc.settings, adjustment: { ...bsc.settings.adjustment, enableGeneralAdjustment: checked } })}
                     />
+                </Grid.Col>
 
+                <Grid.Col span={12}>
                     {bsc.settings.adjustment.enableGeneralAdjustment ? (
-                        <Grid justify="center" align="center" grow sx={{ width: "100%" }}>
+                        <Grid grow sx={{ width: "100%" }}>
                             <Grid.Col span={6}>
                                 <CustomNumberInput
                                     label="General Image Template Matching for button image assets"
@@ -88,68 +96,75 @@ const Adjustments = () => {
                             </Grid.Col>
                         </Grid>
                     ) : null}
-                </Group>
-            </Container>
+                </Grid.Col>
+            </Grid>
         )
     }
 
     const renderPendingBattles = () => {
         return (
-            <Container>
-                <Text id="pending-battles">Check for Pending Battles</Text>
+            <Grid>
+                <Grid.Col span={12}>
+                    <Text id="pending-battles">Check for Pending Battles</Text>
+                </Grid.Col>
 
-                <Group>
+                <Grid.Col span={12}>
                     <CustomSwitch
                         label="Enable Pending Battles Adjustments"
                         description="Enable adjustment of tries of check for Pending Battles."
                         checked={bsc.settings.adjustment.enablePendingBattleAdjustment}
                         onChange={(checked) => bsc.setSettings({ ...bsc.settings, adjustment: { ...bsc.settings.adjustment, enablePendingBattleAdjustment: checked } })}
                     />
+                </Grid.Col>
 
-                    {bsc.settings.adjustment.enablePendingBattleAdjustment ? (
-                        <Grid justify="center" align="center" grow sx={{ width: "100%" }}>
-                            <Grid.Col span={6}>
-                                <CustomNumberInput
-                                    label="Delay Before Starting Check"
-                                    value={bsc.settings.adjustment.adjustBeforePendingBattle}
-                                    onChange={(value) => bsc.setSettings({ ...bsc.settings, adjustment: { ...bsc.settings.adjustment, adjustBeforePendingBattle: value } })}
-                                    min={1}
-                                    max={999}
-                                    description="Set the default number of seconds before starting the check for Pending Battles."
-                                />
-                            </Grid.Col>
-                            <Grid.Col span={6}>
-                                <CustomNumberInput
-                                    label="Check for Pending Battles"
-                                    value={bsc.settings.adjustment.adjustPendingBattle}
-                                    onChange={(value) => bsc.setSettings({ ...bsc.settings, adjustment: { ...bsc.settings.adjustment, adjustPendingBattle: value } })}
-                                    min={1}
-                                    max={999}
-                                    description="Set the default number of tries to check for Pending Battles."
-                                />
-                            </Grid.Col>
-                        </Grid>
-                    ) : null}
-                </Group>
-            </Container>
+                <Grid.Col span={12}></Grid.Col>
+                {bsc.settings.adjustment.enablePendingBattleAdjustment ? (
+                    <Grid grow sx={{ width: "100%" }}>
+                        <Grid.Col span={6}>
+                            <CustomNumberInput
+                                label="Delay Before Starting Check"
+                                value={bsc.settings.adjustment.adjustBeforePendingBattle}
+                                onChange={(value) => bsc.setSettings({ ...bsc.settings, adjustment: { ...bsc.settings.adjustment, adjustBeforePendingBattle: value } })}
+                                min={1}
+                                max={999}
+                                description="Set the default number of seconds before starting the check for Pending Battles."
+                            />
+                        </Grid.Col>
+                        <Grid.Col span={6}>
+                            <CustomNumberInput
+                                label="Check for Pending Battles"
+                                value={bsc.settings.adjustment.adjustPendingBattle}
+                                onChange={(value) => bsc.setSettings({ ...bsc.settings, adjustment: { ...bsc.settings.adjustment, adjustPendingBattle: value } })}
+                                min={1}
+                                max={999}
+                                description="Set the default number of tries to check for Pending Battles."
+                            />
+                        </Grid.Col>
+                    </Grid>
+                ) : null}
+            </Grid>
         )
     }
 
     const renderCaptcha = () => {
         return (
-            <Container>
-                <Text id="captcha">Check for CAPTCHA</Text>
+            <Grid>
+                <Grid.Col span={12}>
+                    <Text id="captcha">Check for CAPTCHA</Text>
+                </Grid.Col>
 
-                <Group>
+                <Grid.Col span={12}>
                     <CustomSwitch
                         label="Enable CAPTCHA Adjustments"
                         description="Enable adjustment of tries of check for CAPTCHA."
                         checked={bsc.settings.adjustment.enableCaptchaAdjustment}
                         onChange={(checked) => bsc.setSettings({ ...bsc.settings, adjustment: { ...bsc.settings.adjustment, enableCaptchaAdjustment: checked } })}
                     />
+                </Grid.Col>
 
+                <Grid.Col span={12}>
                     {bsc.settings.adjustment.enableCaptchaAdjustment ? (
-                        <Grid justify="center" align="center" grow sx={{ width: "100%" }}>
+                        <Grid grow sx={{ width: "100%" }}>
                             <Grid.Col span={6}>
                                 <CustomNumberInput
                                     label="Check for CAPTCHA"
@@ -163,26 +178,30 @@ const Adjustments = () => {
                             <Grid.Col span={6} />
                         </Grid>
                     ) : null}
-                </Group>
-            </Container>
+                </Grid.Col>
+            </Grid>
         )
     }
 
     const renderSupportSummonSelection = () => {
         return (
-            <Container>
-                <Text id="support-summons">Support Summon Selection Screen</Text>
+            <Grid>
+                <Grid.Col span={12}>
+                    <Text id="support-summons">Support Summon Selection Screen</Text>
+                </Grid.Col>
 
-                <Group>
+                <Grid.Col span={12}>
                     <CustomSwitch
                         label="Enable Summon Selection Screen Adjustments"
                         description="Enable adjustment of tries for Support Summon Selection Screen."
                         checked={bsc.settings.adjustment.enableSupportSummonSelectionScreenAdjustment}
                         onChange={(checked) => bsc.setSettings({ ...bsc.settings, adjustment: { ...bsc.settings.adjustment, enableSupportSummonSelectionScreenAdjustment: checked } })}
                     />
+                </Grid.Col>
 
+                <Grid.Col span={12}>
                     {bsc.settings.adjustment.enableSupportSummonSelectionScreenAdjustment ? (
-                        <Grid justify="center" align="center" grow sx={{ width: "100%" }}>
+                        <Grid grow sx={{ width: "100%" }}>
                             <Grid.Col span={6}>
                                 <CustomNumberInput
                                     label="Arrival at Support Summon Selection screen"
@@ -196,26 +215,30 @@ const Adjustments = () => {
                             <Grid.Col span={6} />
                         </Grid>
                     ) : null}
-                </Group>
-            </Container>
+                </Grid.Col>
+            </Grid>
         )
     }
 
     const renderCombatMode = () => {
         return (
-            <Container>
-                <Text id="combat-mode">Combat Mode</Text>
+            <Grid>
+                <Grid.Col span={12}>
+                    <Text id="combat-mode">Combat Mode</Text>
+                </Grid.Col>
 
-                <Group>
+                <Grid.Col span={12}>
                     <CustomSwitch
                         label="Enable Combat Mode Adjustments"
                         description="Enable adjustment of tries for Combat Mode Adjustments."
                         checked={bsc.settings.adjustment.enableCombatModeAdjustment}
                         onChange={(checked) => bsc.setSettings({ ...bsc.settings, adjustment: { ...bsc.settings.adjustment, enableCombatModeAdjustment: checked } })}
                     />
+                </Grid.Col>
 
+                <Grid.Col span={12}>
                     {bsc.settings.adjustment.enableCombatModeAdjustment ? (
-                        <Grid justify="center" align="center" grow sx={{ width: "100%" }}>
+                        <Grid grow sx={{ width: "100%" }}>
                             <Grid.Col span={6}>
                                 <CustomNumberInput
                                     label="Arrival at Combat Screen"
@@ -318,26 +341,30 @@ const Adjustments = () => {
                             </Grid.Col>
                         </Grid>
                     ) : null}
-                </Group>
-            </Container>
+                </Grid.Col>
+            </Grid>
         )
     }
 
     const renderArcarum = () => {
         return (
-            <Container>
-                <Text id="arcarum">Arcrum</Text>
+            <Grid>
+                <Grid.Col span={12}>
+                    <Text id="arcarum">Arcarum</Text>
+                </Grid.Col>
 
-                <Group>
+                <Grid.Col span={12}>
                     <CustomSwitch
                         label="Enable Arcarum Adjustments"
                         description="Enable adjustment of tries for Arcarum Adjustments."
                         checked={bsc.settings.adjustment.enableArcarumAdjustment}
                         onChange={(checked) => bsc.setSettings({ ...bsc.settings, adjustment: { ...bsc.settings.adjustment, enableArcarumAdjustment: checked } })}
                     />
+                </Grid.Col>
 
+                <Grid.Col span={12}>
                     {bsc.settings.adjustment.enableArcarumAdjustment ? (
-                        <Grid justify="center" align="center" grow sx={{ width: "100%" }}>
+                        <Grid grow sx={{ width: "100%" }}>
                             <Grid.Col span={6}>
                                 <CustomNumberInput
                                     label="Determining Which Action To Take"
@@ -360,21 +387,29 @@ const Adjustments = () => {
                             </Grid.Col>
                         </Grid>
                     ) : null}
-                </Group>
-            </Container>
+                </Grid.Col>
+            </Grid>
         )
     }
 
     return (
         <Container className={classes.container}>
-            <Text>Adjust the default number of tries for the following situations. On average for a 8c CPU and CUDA-compatible GPU with the bot using CUDA, a try takes about 0.175 seconds.</Text>
-            {renderStart()}
-            {renderGeneral()}
-            {renderPendingBattles()}
-            {renderCaptcha()}
-            {renderSupportSummonSelection()}
-            {renderCombatMode()}
-            {renderArcarum()}
+            <Stack spacing="xs">
+                <Text>Adjust the default number of tries for the following situations. On average for a 8c CPU and CUDA-compatible GPU with the bot using CUDA, a try takes about 0.175 seconds.</Text>
+                {renderStart()}
+                <Divider my="xs" />
+                {renderGeneral()}
+                <Divider my="xs" />
+                {renderPendingBattles()}
+                <Divider my="xs" />
+                {renderCaptcha()}
+                <Divider my="xs" />
+                {renderSupportSummonSelection()}
+                <Divider my="xs" />
+                {renderCombatMode()}
+                <Divider my="xs" />
+                {renderArcarum()}
+            </Stack>
         </Container>
     )
 }

@@ -1,4 +1,4 @@
-import { Container } from "@mantine/core"
+import { Stack } from "@mantine/core"
 import CustomSwitch from "../../components/CustomSwitch"
 import CustomNumberInput from "../../components/CustomNumberInput"
 import { useContext } from "react"
@@ -9,7 +9,7 @@ const GuildWarsHelper = () => {
 
     if (bsc.settings.game.farmingMode === "Guild Wars") {
         return (
-            <Container>
+            <Stack>
                 <CustomSwitch
                     label="Enable if Guild Wars is in different position"
                     description="Enable this to properly select Guild Wars if it is not positioned first on the list of events in the Home Menu."
@@ -27,7 +27,7 @@ const GuildWarsHelper = () => {
                         description="Default is the first position or the value of 0"
                     />
                 ) : null}
-            </Container>
+            </Stack>
         )
     } else {
         return null
