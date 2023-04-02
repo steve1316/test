@@ -38,16 +38,19 @@ jobs:
             - name: Build using Yarn command
               run: yarn build
 
-            - name: Read version from update.json
-              run: |
-                  echo 'UPDATE_JSON << EOF' >> $GITHUB_ENV
-                  cat ./src-tauri/update.json >> $GITHUB_ENV
-                  echo 'EOF' >> $GITHUB_ENV
+            - name: Get version from update.json
+              id: version-getter
+              uses: notiz-dev/github-action-json-property@release
+              with:
+                  path: ./src-tauri/update.json
+                  prop_path: version
+
+            - name: Set version to env
+              run: echo "VERSION=v${{steps.version-getter.outputs.prop}}" >> $GITHUB_ENV
 
             - name: Create the zip file
               run: |
-                  file_name="Granblue Automation v${{fromJson(env.UPDATE_JSON).version}}.zip"
-                  echo "VERSION=v${{fromJson(env.UPDATE_JSON).version}}" >> $GITHUB_ENV
+                  file_name="Granblue Automation v${{env.VERSION}}.zip"
                   echo "FILE_NAME=${file_name}" >> $GITHUB_ENV
                   echo "${{env.FILE_NAME}}"
                   cd ./src-tauri/target/release
