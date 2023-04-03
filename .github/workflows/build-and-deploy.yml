@@ -42,49 +42,42 @@ jobs:
               run: yarn build
 
             - name: Get version from update.json
-              id: version-getter
+              id: json_property_getter
               uses: notiz-dev/github-action-json-property@release
               with:
                   path: ./src-tauri/update.json
                   prop_path: version
 
             - name: Set version and zip file name
-              id: getter
+              id: name_version_getter
               run: |
-                  echo "Granblue Automation v${{steps.version-getter.outputs.prop}}"
-                  echo "VERSION=v${{steps.version-getter.outputs.prop}}" >> $GITHUB_OUTPUT
-                  echo "FILE_NAME=Granblue Automation v${{steps.version-getter.outputs.prop}}.zip" >> $GITHUB_OUTPUT
+                  echo "Granblue Automation v${{steps.json_property_getter.outputs.prop}}"
+                  echo "VERSION=v${{steps.json_property_getter.outputs.prop}}" >> $GITHUB_OUTPUT
+                  echo "FILE_NAME=Granblue Automation v${{steps.json_property_getter.outputs.prop}}.zip" >> $GITHUB_OUTPUT
+              shell: bash
+
+            - run: |
+                  echo VERSION: ${{steps.name_version_getter.outputs.VERSION}}
+                  echo FILE_NAME: ${{steps.name_version_getter.outputs.FILE_NAME}}
+              shell: bash
 
             - name: Create the zip file (windows only)
               if: matrix.platform == 'windows-latest'
               run: |
                   cd ./src-tauri/target/release
-                  Compress-Archive -Path 'backend','images','scripts','./Granblue Automation.exe' -DestinationPath './${{steps.getter.outputs.FILE_NAME}}'
+                  Compress-Archive -Path 'backend','images','scripts','./Granblue Automation.exe' -DestinationPath './${{steps.name_version_getter.outputs.FILE_NAME}}'
 
             - name: Create the zip file (ubuntu only)
               if: matrix.platform == 'ubuntu-latest'
               run: |
-                  echo "FILE_NAME=Granblue Automation ${{env.VERSION}}.zip" >> $GITHUB_ENV
-                  echo "File Name: ${{env.FILE_NAME}}"
                   cd ./src-tauri/target/release
-                  zip -r "${{env.FILE_NAME}}" backend images scripts Granblue\ Automation.exe
+                  zip -r "${{steps.name_version_getter.outputs.FILE_NAME}}" backend images scripts Granblue\ Automation.exe
 
-            - name: Create Draft Release (windows only)
+            - name: Create Draft Release
               uses: softprops/action-gh-release@v1
-              if: matrix.platform == 'windows-latest'
               with:
-                  name: ${{steps.getter.outputs.VERSION}}
-                  tag_name: ${{steps.getter.outputs.VERSION}}
+                  name: ${{steps.name_version_getter.outputs.VERSION}}
+                  tag_name: ${{steps.name_version_getter.outputs.VERSION}}
                   draft: true
                   files: |
-                      ./src-tauri/target/release/${{steps.getter.outputs.FILE_NAME}}
-
-            - name: Create Draft Release (ubuntu only)
-              uses: softprops/action-gh-release@v1
-              if: matrix.platform == 'ubuntu-latest'
-              with:
-                  name: ${{env.VERSION}}
-                  tag_name: ${{env.VERSION}}
-                  draft: true
-                  files: |
-                      ./src-tauri/target/release/${{env.FILE_NAME}}
+                      ./src-tauri/target/release/${{steps.name_version_getter.outputs.FILE_NAME}}
