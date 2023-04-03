@@ -3,6 +3,9 @@ name: "Build and Create Draft Release"
 on:
     workflow_dispatch:
 
+permissions:
+    contents: write
+
 env:
     TAURI_PRIVATE_KEY: ${{secrets.TAURI_PRIVATE_KEY}}
 
