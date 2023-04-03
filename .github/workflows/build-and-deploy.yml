@@ -42,31 +42,23 @@ jobs:
               run: yarn build
 
             - name: Get version from update.json
-              id: version-getter
               uses: notiz-dev/github-action-json-property@release
               with:
                   path: ./src-tauri/update.json
                   prop_path: version
 
-            - name: Set version to env (windows only)
-              if: matrix.platform == 'windows-latest'
+            - name: Set version and zip file name
+              id: getter
               run: |
-                  echo "VERSION=v${{steps.version-getter.outputs.prop}}" >> $env:GITHUB_ENV
-                  echo "Version: $env:VERSION"
-
-            - name: Set version to env (ubuntu only)
-              if: matrix.platform == 'ubuntu-latest'
-              run: |
-                  echo "VERSION=v${{steps.version-getter.outputs.prop}}" >> $GITHUB_ENV
-                  echo "Version: ${{env.VERSION}}"
+                  echo "Granblue Automation v${{steps.version-getter.outputs.prop}}"
+                  echo "VERSION=v${{steps.version-getter.outputs.prop}}" >> $GITHUB_OUTPUT
+                  echo "FILE_NAME=Granblue Automation v${{steps.version-getter.outputs.prop}}.zip" >> $GITHUB_OUTPUT
 
             - name: Create the zip file (windows only)
               if: matrix.platform == 'windows-latest'
               run: |
-                  echo "FILE_NAME=Granblue Automation $env:VERSION.zip" >> $GITHUB_ENV
-                  echo "File Name: $env:FILE_NAME"
                   cd ./src-tauri/target/release
-                  Compress-Archive -Path 'backend','images','scripts','./Granblue Automation.exe' -DestinationPath './$env:FILE_NAME.zip'
+                  Compress-Archive -Path 'backend','images','scripts','./Granblue Automation.exe' -DestinationPath './${{steps.getter.FILE_NAME}}'
 
             - name: Create the zip file (ubuntu only)
               if: matrix.platform == 'ubuntu-latest'
@@ -80,11 +72,11 @@ jobs:
               uses: softprops/action-gh-release@v1
               if: matrix.platform == 'windows-latest'
               with:
-                  name: $env:VERSION
-                  tag_name: $env:VERSION
+                  name: ${{steps.getter.VERSION}}
+                  tag_name: ${{steps.getter.VERSION}}
                   draft: true
                   files: |
-                      ./src-tauri/target/release/$env:FILE_NAME
+                      ./src-tauri/target/release/${{steps.getter.FILE_NAME}}
 
             - name: Create Draft Release (ubuntu only)
               uses: softprops/action-gh-release@v1
