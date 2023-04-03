@@ -59,7 +59,7 @@ jobs:
               if: matrix.platform == 'windows-latest'
               run: |
                   cd ./src-tauri/target/release
-                  Compress-Archive -Path 'backend','images','scripts','./Granblue Automation.exe' -DestinationPath './${{steps.getter.FILE_NAME}}'
+                  Compress-Archive -Path 'backend','images','scripts','./Granblue Automation.exe' -DestinationPath './${{steps.getter.outputs.FILE_NAME}}'
 
             - name: Create the zip file (ubuntu only)
               if: matrix.platform == 'ubuntu-latest'
@@ -73,11 +73,11 @@ jobs:
               uses: softprops/action-gh-release@v1
               if: matrix.platform == 'windows-latest'
               with:
-                  name: ${{steps.getter.VERSION}}
-                  tag_name: ${{steps.getter.VERSION}}
+                  name: ${{steps.getter.outputs.VERSION}}
+                  tag_name: ${{steps.getter.outputs.VERSION}}
                   draft: true
                   files: |
-                      ./src-tauri/target/release/${{steps.getter.FILE_NAME}}
+                      ./src-tauri/target/release/${{steps.getter.outputs.FILE_NAME}}
 
             - name: Create Draft Release (ubuntu only)
               uses: softprops/action-gh-release@v1
