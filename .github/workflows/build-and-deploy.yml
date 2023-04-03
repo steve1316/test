@@ -13,7 +13,7 @@ jobs:
     build-and-deploy:
         strategy:
             matrix:
-                platform: [ubuntu-latest]
+                platform: [windows-latest]
         runs-on: ${{matrix.platform}}
         steps:
             - name: Checkout this repo
@@ -51,7 +51,17 @@ jobs:
             - name: Set version to env
               run: echo "VERSION=v${{steps.version-getter.outputs.prop}}" >> $GITHUB_ENV
 
-            - name: Create the zip file
+            - name: Create the zip file (windows)
+              if: matrix.platform == 'windows-latest'
+              run: |
+                  file_name="Granblue Automation ${{env.VERSION}}.zip"
+                  echo "FILE_NAME=${file_name}" >> $GITHUB_ENV
+                  echo "${{env.FILE_NAME}}"
+                  cd ./src-tauri/target/release
+                  Compress-Archive -Path 'backend','images','scripts','./Granblue Automation.exe' -DestinationPath './Granblue Automation.zip'
+
+            - name: Create the zip file (ubuntu)
+              if: matrix.platform == 'ubuntu-latest'
               run: |
                   file_name="Granblue Automation ${{env.VERSION}}.zip"
                   echo "FILE_NAME=${file_name}" >> $GITHUB_ENV
