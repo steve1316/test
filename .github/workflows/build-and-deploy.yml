@@ -42,6 +42,7 @@ jobs:
               run: yarn build
 
             - name: Get version from update.json
+              id: version-getter
               uses: notiz-dev/github-action-json-property@release
               with:
                   path: ./src-tauri/update.json
