@@ -50,16 +50,17 @@ jobs:
 
             - name: Create the zip file
               run: |
-                  file_name="Granblue Automation v${{env.VERSION}}.zip"
+                  file_name="Granblue Automation ${{env.VERSION}}.zip"
                   echo "FILE_NAME=${file_name}" >> $GITHUB_ENV
                   echo "${{env.FILE_NAME}}"
                   cd ./src-tauri/target/release
-                  zip -r ${file_name} backend images scripts Granblue\ Automation.exe
+                  zip -r "${file_name}" backend images scripts Granblue\ Automation.exe
 
             - name: Create Draft Release
               uses: softprops/action-gh-release@v1
               with:
                   name: ${{env.VERSION}}
-                  drafts: true
+                  tag_name: ${{env.VERSION}}
+                  draft: true
                   files: |
                       ./src-tauri/target/release/${{env.FILE_NAME}}
