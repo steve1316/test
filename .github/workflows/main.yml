@@ -27,8 +27,8 @@ jobs:
               id: getter
               run: |
                   echo "Granblue Automation v${{steps.version-getter.outputs.prop}}"
-                  echo "VERSION=v${{steps.version-getter.outputs.prop}}" >> $env.GITHUB_OUTPUT
-                  echo "FILE_NAME=Granblue Automation v${{steps.version-getter.outputs.prop}}.zip" >> $env.GITHUB_OUTPUT
+                  echo "VERSION=v${{steps.version-getter.outputs.prop}}" >> $GITHUB_OUTPUT
+                  echo "FILE_NAME=Granblue Automation v${{steps.version-getter.outputs.prop}}.zip" >> $GITHUB_OUTPUT
               shell: bash
 
             - run: |
@@ -41,7 +41,6 @@ jobs:
               run: |
                   cd ./src-tauri
                   Compress-Archive -Path 'backend','images','scripts' -DestinationPath './${{steps.getter.outputs.FILE_NAME}}'
-              shell: bash
 
             - name: Create Draft Release (windows only)
               uses: softprops/action-gh-release@v1
