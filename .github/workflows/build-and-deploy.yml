@@ -29,7 +29,7 @@ jobs:
               with:
                   toolchain: stable
 
-            - name: Install webkit2gtk and zip (ubuntu environment only)
+            - name: Install webkit2gtk and zip (ubuntu only)
               if: matrix.platform == 'ubuntu-latest'
               run: |
                   sudo apt-get update
@@ -48,20 +48,27 @@ jobs:
                   path: ./src-tauri/update.json
                   prop_path: version
 
-            - name: Set version to env
+            - name: Set version to env (windows only)
+              if: matrix.platform == 'windows-latest'
+              run: |
+                  echo "VERSION=v${{steps.version-getter.outputs.prop}}" >> $env:GITHUB_ENV
+                  echo "Version: $env:VERSION"
+
+            - name: Set version to env (ubuntu only)
+              if: matrix.platform == 'ubuntu-latest'
               run: |
                   echo "VERSION=v${{steps.version-getter.outputs.prop}}" >> $GITHUB_ENV
                   echo "Version: ${{env.VERSION}}"
 
-            - name: Create the zip file (windows)
+            - name: Create the zip file (windows only)
               if: matrix.platform == 'windows-latest'
               run: |
-                  echo "FILE_NAME=Granblue Automation ${{env.VERSION}}.zip" >> $GITHUB_ENV
-                  echo "File Name: ${{env.FILE_NAME}}"
+                  echo "FILE_NAME=Granblue Automation $env:VERSION.zip" >> $GITHUB_ENV
+                  echo "File Name: $env:FILE_NAME"
                   cd ./src-tauri/target/release
-                  Compress-Archive -Path 'backend','images','scripts','./Granblue Automation.exe' -DestinationPath './${{env.FILE_NAME}}.zip'
+                  Compress-Archive -Path 'backend','images','scripts','./Granblue Automation.exe' -DestinationPath './$env:FILE_NAME.zip'
 
-            - name: Create the zip file (ubuntu)
+            - name: Create the zip file (ubuntu only)
               if: matrix.platform == 'ubuntu-latest'
               run: |
                   echo "FILE_NAME=Granblue Automation ${{env.VERSION}}.zip" >> $GITHUB_ENV
@@ -69,8 +76,19 @@ jobs:
                   cd ./src-tauri/target/release
                   zip -r "${{env.FILE_NAME}}" backend images scripts Granblue\ Automation.exe
 
-            - name: Create Draft Release
+            - name: Create Draft Release (windows only)
               uses: softprops/action-gh-release@v1
+              if: matrix.platform == 'windows-latest'
+              with:
+                  name: $env:VERSION
+                  tag_name: $env:VERSION
+                  draft: true
+                  files: |
+                      ./src-tauri/target/release/$env:FILE_NAME
+
+            - name: Create Draft Release (ubuntu only)
+              uses: softprops/action-gh-release@v1
+              if: matrix.platform == 'ubuntu-latest'
               with:
                   name: ${{env.VERSION}}
                   tag_name: ${{env.VERSION}}
