@@ -49,13 +49,15 @@ jobs:
                   prop_path: version
 
             - name: Set version to env
-              run: echo "VERSION=v${{steps.version-getter.outputs.prop}}" >> $GITHUB_ENV
+              run: |
+                  echo "VERSION=v${{steps.version-getter.outputs.prop}}" >> $GITHUB_ENV
+                  echo "Version: ${{env.VERSION}}"
 
             - name: Create the zip file (windows)
               if: matrix.platform == 'windows-latest'
               run: |
                   echo "FILE_NAME=Granblue Automation ${{env.VERSION}}.zip" >> $GITHUB_ENV
-                  echo "${{env.FILE_NAME}}"
+                  echo "File Name: ${{env.FILE_NAME}}"
                   cd ./src-tauri/target/release
                   Compress-Archive -Path 'backend','images','scripts','./Granblue Automation.exe' -DestinationPath './${{env.FILE_NAME}}.zip'
 
@@ -63,7 +65,7 @@ jobs:
               if: matrix.platform == 'ubuntu-latest'
               run: |
                   echo "FILE_NAME=Granblue Automation ${{env.VERSION}}.zip" >> $GITHUB_ENV
-                  echo "${{env.FILE_NAME}}"
+                  echo "File Name: ${{env.FILE_NAME}}"
                   cd ./src-tauri/target/release
                   zip -r "${{env.FILE_NAME}}" backend images scripts Granblue\ Automation.exe
 
