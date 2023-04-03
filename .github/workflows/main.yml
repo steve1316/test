@@ -1,0 +1,47 @@
+name: "test"
+
+on:
+    workflow_dispatch:
+
+permissions:
+    contents: write
+
+jobs:
+    build-and-deploy:
+        strategy:
+            matrix:
+                platform: [windows-latest]
+        runs-on: ${{matrix.platform}}
+        steps:
+            - name: Checkout this repo
+              uses: actions/checkout/@v3
+
+            - name: Get version from update.json
+              id: version-getter
+              uses: notiz-dev/github-action-json-property@release
+              with:
+                  path: ./src-tauri/update.json
+                  prop_path: version
+
+            - name: Set version and zip file name
+              id: getter
+              run: |
+                  echo "Granblue Automation v${{steps.version-getter.outputs.prop}}"
+                  echo "VERSION=v${{steps.version-getter.outputs.prop}}" >> $GITHUB_OUTPUT
+                  echo "FILE_NAME=Granblue Automation v${{steps.version-getter.outputs.prop}}.zip" >> $GITHUB_OUTPUT
+
+            - name: Create the zip file (windows only)
+              if: matrix.platform == 'windows-latest'
+              run: |
+                  cd ./src-tauri
+                  Compress-Archive -Path 'backend','images','scripts','./Granblue Automation.exe' -DestinationPath './${{steps.getter.outputs.FILE_NAME}}'
+
+            - name: Create Draft Release (windows only)
+              uses: softprops/action-gh-release@v1
+              if: matrix.platform == 'windows-latest'
+              with:
+                  name: ${{steps.getter.outputs.VERSION}}
+                  tag_name: ${{steps.getter.outputs.VERSION}}
+                  draft: true
+                  files: |
+                      ./src-tauri/${{steps.getter.outputs.FILE_NAME}}
