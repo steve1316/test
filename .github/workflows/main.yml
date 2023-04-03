@@ -27,8 +27,8 @@ jobs:
               id: getter
               run: |
                   echo "Granblue Automation v${{steps.version-getter.outputs.prop}}"
-                  echo "VERSION=v${{steps.version-getter.outputs.prop}}" >> $GITHUB_OUTPUT
-                  echo "FILE_NAME=Granblue Automation v${{steps.version-getter.outputs.prop}}.zip" >> $GITHUB_OUTPUT
+                  echo "VERSION=v${{steps.version-getter.outputs.prop}}" >> $env.GITHUB_OUTPUT
+                  echo "FILE_NAME=Granblue Automation v${{steps.version-getter.outputs.prop}}.zip" >> $env.GITHUB_OUTPUT
 
             - run: |
                 echo VERSION: ${{steps.getter.outputs.VERSION}}
